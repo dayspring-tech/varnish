@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-if node['platform']?('amazon')
+if node['platform'] === 'amazon'
   yum_repository 'varnish' do
     description "Varnish #{node['varnish']['version']} repo (el6 - $basearch)"
     url "http://repo.varnish-cache.org/redhat/varnish-#{node['varnish']['version']}/el6/"
@@ -24,7 +24,7 @@ if node['platform']?('amazon')
     priority 5
     action 'create'
   end
-elsif node['platform_family']?('debian')
+elsif ['debian'].include?(node['platform_family'])
   include_recipe 'apt'
   apt_repository 'varnish-cache' do
     uri "http://repo.varnish-cache.org/#{node['platform']}"
@@ -34,7 +34,7 @@ elsif node['platform_family']?('debian')
     deb_src true
     notifies 'nothing', 'execute[apt-get update]', 'immediately'
   end
-elsif node['platform_family']?('rhel', 'fedora')
+elsif ['rhel', 'fedora'].include?(node['platform_family'])
   yum_repository 'varnish' do
     description "Varnish #{node['varnish']['version']} repo (#{node['platform_version']} - $basearch)"
     url "http://repo.varnish-cache.org/redhat/varnish-#{node['varnish']['version']}/el#{node['platform_version'].to_i}/"
