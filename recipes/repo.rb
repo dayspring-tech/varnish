@@ -21,7 +21,7 @@ if node['platform'] === 'amazon'
     url "http://repo.varnish-cache.org/redhat/varnish-#{node['varnish']['version']}/el6/"
     gpgcheck false
     gpgkey 'http://repo.varnish-cache.org/debian/GPG-key.txt'
-    priority 5
+    priority "5"
     action 'create'
   end
 elsif ['debian'].include?(node['platform_family'])
