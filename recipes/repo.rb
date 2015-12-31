@@ -15,8 +15,16 @@
 # limitations under the License.
 #
 
-case node['platform_family']
-when 'debian'
+if node['platform']?('amazon')
+  yum_repository 'varnish' do
+    description "Varnish #{node['varnish']['version']} repo (el6 - $basearch)"
+    url "http://repo.varnish-cache.org/redhat/varnish-#{node['varnish']['version']}/el6/"
+    gpgcheck false
+    gpgkey 'http://repo.varnish-cache.org/debian/GPG-key.txt'
+    priority 5
+    action 'create'
+  end
+elsif node['platform_family']?('debian')
   include_recipe 'apt'
   apt_repository 'varnish-cache' do
     uri "http://repo.varnish-cache.org/#{node['platform']}"
@@ -26,15 +34,7 @@ when 'debian'
     deb_src true
     notifies 'nothing', 'execute[apt-get update]', 'immediately'
   end
-when 'amazon'
-  yum_repository 'varnish' do
-    description "Varnish #{node['varnish']['version']} repo (el6 - $basearch)"
-    url "http://repo.varnish-cache.org/redhat/varnish-#{node['varnish']['version']}/el6/"
-    gpgcheck false
-    gpgkey 'http://repo.varnish-cache.org/debian/GPG-key.txt'
-    action 'create'
-  end
-when 'rhel', 'fedora'
+elsif node['platform_family']?('rhel', 'fedora')
   yum_repository 'varnish' do
     description "Varnish #{node['varnish']['version']} repo (#{node['platform_version']} - $basearch)"
     url "http://repo.varnish-cache.org/redhat/varnish-#{node['varnish']['version']}/el#{node['platform_version'].to_i}/"
