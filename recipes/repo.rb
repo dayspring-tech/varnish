@@ -34,4 +34,12 @@ when 'rhel', 'fedora'
     gpgkey 'http://repo.varnish-cache.org/debian/GPG-key.txt'
     action 'create'
   end
+when 'amazon'
+  yum_repository 'varnish' do
+    description "Varnish #{node['varnish']['version']} repo (el6 - $basearch)"
+    url "http://repo.varnish-cache.org/redhat/varnish-#{node['varnish']['version']}/el6/"
+    gpgcheck false
+    gpgkey 'http://repo.varnish-cache.org/debian/GPG-key.txt'
+    action 'create'
+  end
 end
